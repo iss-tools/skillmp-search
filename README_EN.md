@@ -28,7 +28,6 @@
   <img src="./doc/image/image2.png" alt="Editor" width="300">
   <img src="./doc/image/image3.png" alt="Editor" width="300">
   <img src="./doc/image/image4.png" alt="Editor" width="300">
-  <img src="./doc/image/image5.png" alt="Editor" width="300">
 </div>
 
 ## 📦 Tech Stack

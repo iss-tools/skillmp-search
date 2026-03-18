@@ -38,12 +38,18 @@ export default defineManifest({
   },
   web_accessible_resources: [
     {
-      resources: ['img/logo-16.png', 'img/logo-32.png', 'img/logo-48.png', 'img/logo-128.png','options.html'],
+      resources: [
+        'img/logo-16.png',
+        'img/logo-32.png',
+        'img/logo-48.png',
+        'img/logo-128.png',
+        'options.html',
+      ],
       matches: ['http://*/*', 'https://*/*', '<all_urls>'],
     },
   ],
   permissions: ['sidePanel', 'storage', 'scripting', 'activeTab'],
   chrome_url_overrides: {
-    newtab: 'newtab.html',
+    // newtab: 'newtab.html',
   },
 })
