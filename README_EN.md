@@ -18,6 +18,16 @@
 - **Sorting Options**: Sort by relevance, stars, or last updated time
 - **Settings Management**: Configure Target Limit, API Key, and Google Translate API Key
 
+## 📸 Demo Screenshots
+
+### Search Results
+![Search Results](/doc/image/image.png)
+![Search Results](/doc/image/image0.png)
+![Search Results](/doc/image/image1.png)
+![Search Results](/doc/image/image2.png)
+![Search Results](/doc/image/image3.png)
+![Search Results](/doc/image/image4.png)
+
 ## 📦 Tech Stack
 
 - **Framework**: Vue 3 (Composition API)
@@ -57,7 +67,21 @@ The build artifacts will be output to the `build/` directory.
 
 ## 🔧 Installing the Extension
 
-### Developer Mode Installation
+### Method 1: Install from GitHub Release (Recommended)
+
+1. Visit [GitHub Releases](https://github.com/iss-tools/skillmp-search/releases)
+2. Download the latest `.zip` or `.crx` file
+3. Open Chrome browser and go to `chrome://extensions/`
+4. Enable **"Developer mode"** in the top right corner
+5. If using `.zip` file:
+   - Extract the downloaded archive
+   - Click **"Load unpacked"**
+   - Select the extracted folder
+6. If using `.crx` file:
+   - Simply drag and drop the `.crx` file onto the extensions page
+   - Click **"Add extension"**
+
+### Method 2: Developer Mode Installation
 
 1. Open Chrome browser and go to `chrome://extensions/`
 2. Enable **"Developer mode"** in the top right corner
@@ -76,12 +100,12 @@ Reference official guide: [Chrome Web Store Publishing Guide](https://developer.
 
 Configure the following parameters in the extension's Options page:
 
-| Setting                  | Description                  | Default Value |
-| ------------------------ | ---------------------------- | ------------- |
-| Target Limit             | Number of results per search | 50            |
-| API Key                  | skillsmp.com API key         | -             |
-| Google Translate API Key | Translation service API key  | -             |
-| Sort By                  | Sorting method               | Relevance     |
+| Setting | Description | Default Value |
+|---------|-------------|---------------|
+| Target Limit | Number of results per search | 50 |
+| API Key | skillsmp.com API key | - |
+| Google Translate API Key | Translation service API key | - |
+| Sort By | Sorting method | Relevance |
 
 ### Sort Options
 
@@ -91,25 +115,25 @@ Configure the following parameters in the extension's Options page:
 
 ### Supported Languages
 
-| Code  | Name                | Flag |
-| ----- | ------------------- | ---- |
-| zh-CN | Simplified Chinese  | 🇨🇳   |
-| zh-TW | Traditional Chinese | 🇨🇳   |
-| en    | English             | 🇺🇸   |
-| ko    | 한국어              | 🇰🇷   |
-| ja    | 日本語              | 🇯🇵   |
-| fr    | Français            | 🇫🇷   |
-| ru    | Русский             | 🇷🇺   |
-| de    | Deutsch             | 🇩🇪   |
-| id    | Bahasa Indonesia    | 🇮🇩   |
-| tl    | Tagalog             | 🇵🇭   |
-| sq    | Shqip               | 🇦🇱   |
-| tr    | Türkçe              | 🇹🇷   |
-| my    | မြန်မာဘာသာ          | 🇲🇲   |
-| th    | ไทย                 | 🇹🇭   |
-| vi    | Tiếng Việt          | 🇻🇳   |
-| pl    | Polski              | 🇵🇱   |
-| pt    | Português           | 🇵🇹   |
+| Code | Name | Flag |
+|------|------|------|
+| zh-CN | Simplified Chinese | 🇨🇳 |
+| zh-TW | Traditional Chinese | 🇹🇼 |
+| en | English | 🇺🇸 |
+| ko | 한국어 | 🇰🇷 |
+| ja | 日本語 | 🇯🇵 |
+| fr | Français | 🇫🇷 |
+| ru | Русский | 🇷🇺 |
+| de | Deutsch | 🇩🇪 |
+| id | Bahasa Indonesia | 🇮🇩 |
+| tl | Tagalog | 🇵🇭 |
+| sq | Shqip | 🇦🇱 |
+| tr | Türkçe | 🇹🇷 |
+| my | မြန်မာဘာသာ | 🇲🇲 |
+| th | ไทย | 🇹🇭 |
+| vi | Tiếng Việt | 🇻🇳 |
+| pl | Polski | 🇵🇱 |
+| pt | Português | 🇵🇹 |
 
 ## 📁 Project Structure
 
@@ -156,11 +180,9 @@ skillmp-search/
 ### Debugging Modes
 
 #### Popup Page Debugging
-
 Visit `http://localhost:3000/popup.html`
 
 #### Options Page Debugging
-
 Visit `http://localhost:3000/options.html`
 
 ### Format Code
@@ -178,7 +200,6 @@ npm run preview
 ## 📝 Changelog
 
 ### v0.0.0
-
 - ✨ Initial release
 - 🎯 Implemented smart skill search functionality
 - 🌐 Added support for 17 languages
@@ -200,6 +221,7 @@ Contributions, issues, and feature requests are welcome!
 - [Vue 3 Official Docs](https://vuejs.org/)
 - [Vite Official Docs](https://vitejs.dev/)
 - [skillsmp.com](https://skillsmp.com)
+- [GitHub Releases](https://github.com/iss-tools/skillmp-search/releases)
 
 ---
 
