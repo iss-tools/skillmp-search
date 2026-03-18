@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Glassmorphism Skill View</title>
+    <style>
+        :root {
+            --bg-color: #f0f2f5;
+            --glass-bg: rgba(255, 255, 255, 0.65);
+            --glass-border: rgba(255, 255, 255, 0.4);
+            --text-main: #333;
+            --text-sub: #666;
+            --accent-green: #27C93F;
+            --shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+            
+            /* Traffic Light Colors */
+            --dot-red: #FF5F56;
+            --dot-yellow: #FFBD2E;
+            --dot-green: #27C93F;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        /* Background decoration to show off glass effect */
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(40px);
+            z-index: -1;
+            opacity: 0.6;
+        }
+        .blob-1 { width: 300px; height: 300px; background: #a8c0ff; top: -50px; left: -50px; }
+        .blob-2 { width: 350px; height: 350px; background: #ff9a9e; bottom: -50px; right: -50px; }
+
+        .window {
+            width: 100%;
+            max-width: 500px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .glass-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        /* --- Navigation Bar --- */
+        .nav-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            position: relative; /* Needed for dropdown positioning if we want it inside here */
+        }
+
+        .current-path { font-weight: 600; color: #d63384; font-size: 1.1rem; }
+
+        .nav-actions {
+            display: flex;
+            gap: 10px;
+            position: relative; /* Context for dropdown */
+        }
+
+        .icon-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid transparent;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .icon-btn:hover { background: rgba(255, 255, 255, 0.4); }
+
+        .icon-btn.menu-active {
+            border-color: rgba(255, 95, 86, 0.4);
+            background: rgba(255, 255, 255, 0.5);
+            color: #333;
+        }
+
+        /* Hamburger Line Styles */
+        .menu-icon-line {
+            width: 16px;
+            height: 2px;
+            background: currentColor;
+            position: relative;
+            border-radius: 2px;
+        }
+        .menu-icon-line::before, .menu-icon-line::after {
+            content: '';
+            position: absolute;
+            width: 16px;
+            height: 2px;
+            background: currentColor;
+            left: 0;
+            border-radius: 2px;
+        }
+        .menu-icon-line::before { top: -5px; }
+        .menu-icon-line::after { top: 5px; }
+
+
+        /* --- Search Component --- */
+        .search-container { display: flex; flex-direction: column; gap: 8px; }
+        .search-top-bar { padding: 8px 16px; display: flex; align-items: center; gap: 8px; }
+        .traffic-lights { display: flex; gap: 6px; }
+        .light { width: 10px; height: 10px; border-radius: 50%; }
+        .red { background-color: var(--dot-red); }
+        .yellow { background-color: var(--dot-yellow); }
+        .green { background-color: var(--dot-green); }
+
+        .search-label { font-size: 0.85rem; color: var(--text-sub); margin-left: auto; }
+
+        .search-input-mock {
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+            color: var(--text-main);
+            font-size: 0.95rem;
+        }
+        .prompt-symbol { color: var(--accent-green); margin-right: 8px; font-weight: bold; }
+        .search-text { color: #bbb; }
+
+
+        /* --- Card List --- */
+        .card-list { display: flex; flex-direction: column; gap: 15px; margin-top: 10px; }
+        
+        .file-card { padding: 16px 20px; display: flex; flex-direction: column; gap: 10px; }
+        .card-header { display: flex; justify-content: space-between; align-items: center; font-size: 0.9rem; }
+        .filename { font-family: 'Menlo', monospace; color: var(--text-sub); }
+        
+        .card-body { display: flex; gap: 15px; margin-top: 5px; }
+        .avatar { 
+            width: 40px; height: 40px; border-radius: 50%; 
+            background-image: url('https://i.pravatar.cc/150?img=12'); /* Use a random avatar from pravatar.cc */
+            background-size: cover; border: 2px solid rgba(255,255,255,0.5);
+        }
+        
+        .source-link { color: var(--accent-green); font-size: 0.95rem; margin-bottom: 6px; font-weight: 500; }
+        .description { font-size: 0.9rem; color: var(--text-sub); line-height: 1.4; opacity: 0.9; }
+        
+        .card-footer { display: flex; justify-content: space-between; margin-top: 5px; font-size: 0.8rem; color: #999; }
+        .star-icon { color: #FFD700; margin-right: 5px; }
+        .heart-icon { 
+            width: 16px; height: 16px; border: 1px solid #ddd; border-radius: 50%; 
+            display: inline-flex; align-items: center; justify-content: center; color: #ccc;
+        }
+
+
+        /* ========================================= */
+        /* DROPDOWN MENU STYLES (The new part)      */
+        /* ========================================= */
+        .dropdown-menu {
+            position: absolute;
+            top: 50px; /* Adjust based on nav bar height + spacing */
+            right: 20px;
+            width: 220px;
+            padding: 10px;
+            
+            /* Glassmorphism styling matching the rest of the app */
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            
+            /* Animation states */
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px) scale(0.95);
+            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .dropdown-menu.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0) scale(1);
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 12px;
+            border-radius: 8px;
+            text-decoration: none;
+            color: #333;
+            font-size: 0.95rem;
+            transition: background 0.2s;
+            cursor: pointer;
+        }
+
+        .dropdown-item:hover {
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        .dropdown-item span:first-child { margin-right: 10px; font-size: 1.1em; }
+
+    </style>
+</head>
+<body>
+
+    <!-- Decorative Blobs -->
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+
+    <div class="window">
+        
+        <!-- Top Nav with Dropdown Trigger -->
+        <div class="nav-bar">
+            <div class="current-path">~/skillsmp</div>
+            <div class="nav-actions">
+                <!-- Sun Button -->
+                <button class="icon-btn">☀️</button>
+                
+                <!-- Menu Button (Triggers Dropdown) -->
+                <div style="position: relative;"> <!-- Wrapper for alignment if needed -->
+                    <button class="icon-btn menu-active" id="menuBtn">
+                        <span class="menu-icon-line"></span>
+                    </button>
+
+                    <!-- The Dropdown Content -->
+                    <div class="dropdown-menu" id="dropdownMenu">
+                        <a href="#" class="dropdown-item">
+                            <span>📑</span> History
+                        </a>
+                        <a href="#" class="dropdown-item">
+                            <span>⚙️</span> Settings
+                        </a>
+                        <a href="#" class="dropdown-item">
+                            <span>❓</span> Help
+                        </a>
+                        <div style="height:1px; background:#ddd; margin: 4px 0;"></div>
+                        <a href="#" class="dropdown-item" style="color: #d63384;">
+                            <span>🔒</span> Logout
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search Section -->
+        <div class="search-container">
+            <div class="search-top-bar glass-panel">
+                <div class="traffic-lights">
+                    <div class="light red"></div>
+                    <div class="light yellow"></div>
+                    <div class="light green"></div>
+                </div>
+                <span class="search-label">search</span>
+            </div>
+
+            <div class="search-input-mock glass-panel">
+                <span class="prompt-symbol">$</span>
+                <span><strong>find</strong></span>
+                <span style="margin: 0 5px;">🔍</span>
+                <span class="search-text">Search 530778 skills: try '</span>
+            </div>
+        </div>
+
+        <!-- Separator -->
+        <hr style="border: 0; border-top: 1px dashed #ccc; opacity: 0.5; margin: 0 0 10px 0;">
+
+        <!-- Card List -->
+        <div class="card-list">
+            <div class="file-card glass-panel">
+                <div class="card-header">
+                    <div class="traffic-lights">
+                        <div class="light red"></div>
+                        <div class="light yellow"></div>
+                        <div class="light green"></div>
+                    </div>
+                    <span class="filename">parallels-discord-roundtrip.md</span>
+                    <span><span class="star-icon">★</span> 318.4k</span>
+                </div>
+                <div class="card-body">
+                    <div class="avatar" style="background-image: url('https://i.pravatar.cc/150?img=60')"></div>
+                    <div class="content-text">
+                        <span class="source-link">from "openclaw/openclaw"</span>
+                        <p class="description">Run the macOS Parallels smoke harness with Discord end-to-end roundtrip verification...</p>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <span>2026-03-17</span>
+                    <span class="heart-icon">♡</span>
+                </div>
+            </div>
+
+            <div class="file-card glass-panel">
+                <div class="card-header">
+                    <div class="traffic-lights">
+                        <div class="light red"></div>
+                        <div class="light yellow"></div>
+                        <div class="light green"></div>
+                    </div>
+                    <span class="filename">acp-router.md</span>
+                    <span><span class="star-icon">★</span> 318.4k</span>
+                </div>
+                <div class="card-body">
+                    <div class="avatar" style="background-image: url('https://i.pravatar.cc/150?img=60')"></div>
+                    <div class="content-text">
+                        <span class="source-link">from "openclaw/openclaw"</span>
+                        <p class="description">Route plain-language requests for Pi, Claude Code, Codex...</p>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <span>2026-03-03</span>
+                    <span class="heart-icon">♡</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Scripts for Dropdown Logic -->
+    <script>
+        const menuBtn = document.getElementById('menuBtn');
+        const dropdownMenu = document.getElementById('dropdownMenu');
+
+        // Toggle dropdown when button is clicked
+        menuBtn.addEventListener('click', (e) => {
+            e.stopPropagation(); // Prevent event from bubbling immediately
+            dropdownMenu.classList.toggle('active');
+        });
+
+        // Close dropdown when clicking outside anywhere else
+        document.addEventListener('click', (e) => {
+            // Check if the click target is neither the button nor the menu itself
+            if (!menuBtn.contains(e.target) && !dropdownMenu.contains(e.target)) {
+                dropdownMenu.classList.remove('active');
+            }
+        });
+
+        // Optional: Close on item click (simulate navigation)
+        const items = document.querySelectorAll('.dropdown-item');
+        items.forEach(item => {
+            item.addEventListener('click', () => {
+                dropdownMenu.classList.remove('active');
+                // Here you could add logic like: alert('Navigated to: ' + item.innerText);
+            });
+        });
+    </script>
+</body>
+</html>
